@@ -1,8 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 import GitHub
-import GitHub.Auth
-import GitHub.Endpoints.Repos
+import GitHub.Endpoints.Repos (organizationRepos')
 import Turtle
 import Data.Text hiding (empty)
 
@@ -12,7 +11,7 @@ import System.Environment (getEnv, lookupEnv)
 
 import qualified Data.Vector as V
 
-org = "scrp"
+org = "haskell"
 outdir = "/Users/bhipple/public_html/"
 
 main :: IO ()
