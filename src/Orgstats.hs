@@ -1,25 +1,27 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Orgstats
-    (processOrg, getRepos, generateStats, toName, download)
+module Orgstats (
+    processOrg
+  , getRepos
+  , download
+  , generateStats
+  , toName
+  )
 where
-
 
 import GitHub
 import GitHub.Endpoints.Repos (organizationRepos')
+import Prelude hiding (FilePath)
 import Turtle
 import Data.Text hiding (empty)
-
 import Data.Maybe (fromJust)
-
 import qualified Data.Vector as V
 
-processOrg :: Auth -> Text -> Text -> IO ()
+processOrg :: Auth -> Text -> FilePath -> IO ()
 processOrg auth org outdir = do
     repos <- getRepos auth org
     mktree ".work"
     V.mapM_ download repos
     V.mapM_ (generateStats org outdir) repos
-
 
 getRepos :: Auth -> Text -> IO (V.Vector Repo)
 getRepos auth org = do
@@ -44,7 +46,7 @@ download r = do
         then shells ("cd " <> dirName <> " && git pull") empty
         else shells ("cd .work && git clone " <> repoHtmlUrl r) empty
 
-generateStats :: Text -> Text -> Repo -> IO ()
-generateStats org fp r = let rn = toName r
-                             outpath = fp <> "/" <> org <> "/" <> rn
-                         in shells ("gitstats .work/" <> rn <> " " <> outpath) empty
+generateStats :: Text -> FilePath -> Repo -> IO ()
+generateStats org outdir r = let rn = toName r
+                                 outpath = format fp outdir <> "/" <> org <> "/" <> rn
+                             in shells ("gitstats .work/" <> rn <> " " <> outpath) empty

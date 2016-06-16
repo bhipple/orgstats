@@ -6,6 +6,3 @@ Input:
 * A Github Organization
 * A Github API Endpoint (Optional)
 * An output directory
-
-## TODO
-Make it configurable
